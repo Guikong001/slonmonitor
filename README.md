@@ -1,10 +1,10 @@
-**[English](https://github.com/Guikong001/PID-Bark-monitor/blob/main/README_en.md)**
+**[English](https://github.com/Guikong001/slonmonitor/blob/main/README_en.md)**
 
 ## 使用方法
 
 ### 本脚本部分
 
-下载本仓库脚本sljiankong，给予运行权限后，使用 ./sljiankong 即可使用。也可以将文件通过root权限放置到/usr/bin下供所有用户使用。
+下载本仓库脚本slonmonitor，给予运行权限后，使用 ./slonmonitor 即可使用。也可以将文件通过root权限放置到/usr/bin下供所有用户使用。
 
 非root用户可以保存在自己的脚本目录下，添加到环境变量即可。
 
@@ -16,7 +16,7 @@
 
 ## 命令目录
 
-`用法: sljiankong [选项]... 
+`用法: slonmonitor [选项]... 
 
 选项:
 
