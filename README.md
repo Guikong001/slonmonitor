@@ -1,3 +1,5 @@
+**[English](https://github.com/Guikong001/PID-Bark-monitor/blob/main/README_en.md)**
+
 ## 使用方法
 
 ### 本脚本部分
