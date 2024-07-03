@@ -1,0 +1,87 @@
+#!/bin/bash
+
+# 初始化变量
+pids=""
+title="默认推送标题"
+interval=300
+watch_interval=60
+version="Alpha-0.0.2"
+key="默认密钥i"
+server="api.day.app"
+
+# 用法说明
+usage() {
+  echo "用法: sljiankong [选项]..."
+  echo "选项:"
+  echo "  -p PID列表    添加pid编号，可以添加多个，使用;隔开，如添加多个PID，请把所有PID使用英文单引号包裹"
+  echo "  -t 标题        更换推送标题"
+  echo "  -c 监控间隔    监控间隔（单位：秒）"
+  echo "  -w 进程间隔    当前正在运行进程的监控间隔（单位：秒）"
+  echo "  -m 密钥        设置Bark推送服务的密钥"
+  echo "  -s 主机        设置为你的自定义Bark服务器"
+  echo "  -h, --help     显示此帮助信息并退出"
+  echo "  -v, --version  显示版本信息并退出"
+}
+
+# 解析命令行参数
+while getopts ":p:t:c:w:m:s:hv-:" opt; do
+  case $opt in
+    p) pids=$(echo "$OPTARG" | tr ';' ' ') ;;
+    t) title="$OPTARG" ;;
+    c) interval="$OPTARG" ;;
+    w) watch_interval="$OPTARG" ;;
+    m) key="$OPTARG" ;;
+    s) server="$OPTARG" ;;
+    h) usage; exit 0 ;;
+    v) echo "sljiankong 版本 $version"; exit 0 ;;
+    -)
+      case "${OPTARG}" in
+        help) usage; exit 0 ;;
+        version) echo "sljiankong 版本 $version"; exit 0 ;;
+        *) echo "非法选项 --$OPTARG"; usage; exit 1 ;;
+      esac
+      ;;
+    \?) echo "非法选项 -$opt"; usage; exit 1 ;;
+  esac
+done
+
+# 后台监控任务
+monitor_processes() {
+    # 初始进程数量
+    total=$(echo $pids | wc -w)
+    # 初始化时间计数器
+    time_passed=0
+
+    # 检测进程是否还在运行
+    while [ -n "$pids" ]; do
+        remaining=$total
+        new_pids=""
+        for pid in $pids; do
+            if ps -p $pid > /dev/null 2>&1; then
+                new_pids="$new_pids $pid"
+            else
+                ((remaining--))
+                curl "https://$server/$key/$title/PID为${pid}的进程已结束，剩余${remaining}个?isArchive=1&group=Personal"
+                echo "$(date '+%Y-%m-%d %H:%M:%S') - PID ${pid} 已结束, 剩余 ${remaining} 个进程."
+            fi
+        done
+        pids=$(echo $new_pids | xargs)
+        total=$(echo $pids | wc -w) # 更新total为剩余进程数量
+        echo "$(date '+%Y-%m-%d %H:%M:%S') - 当前正在监控的进程: $pids"
+        if [ "$remaining" -eq 0 ]; then
+            break
+        fi
+        sleep $watch_interval
+        ((time_passed+=watch_interval))
+        if [ $time_passed -ge $interval ]; then
+            curl "https://$server/$key/$title/当前正在进行的进程数量：${remaining}个?isArchive=1&group=Personal"
+            time_passed=0
+        fi
+    done
+
+    echo "所有监控的进程均已结束。" && curl "https://$server/$key/$title/所有任务都已结束?isArchive=1&group=Personal"
+}
+
+# 启动监控任务并转向后台运行
+echo "sljiankong开始后台监控进程，进程结束后自动退出。"
+monitor_processes > /dev/null 2>&1 &
