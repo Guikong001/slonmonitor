@@ -1,10 +1,10 @@
-**[简体中文](https://github.com/Guikong001/PID-Bark-monitor/blob/main/README.md)**
+**[简体中文](https://github.com/Guikong001/slonmonitor/blob/main/README.md)**
 
 ## Usage
 
 ### Script Usage
 
-Download the script sljiankong from this repository, grant execution permissions, and use ./sljiankong to run it. You can also place the file in /usr/bin with root permissions to make it available for all users.
+Download the script slonmonitor from this repository, grant execution permissions, and use ./slonmonitor to run it. You can also place the file in /usr/bin with root permissions to make it available for all users.
 
 Non-root users can save it in their script directory and add it to their environment variable.
 
@@ -18,7 +18,7 @@ If you are using a self-hosted Bark server, use the -s option to pass the server
 
 <br/>
 
-Usage: sljiankong [options]...
+Usage: slonmonitor [options]...
 
 Options:
 
