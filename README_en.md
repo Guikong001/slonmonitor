@@ -1,4 +1,4 @@
-简体中文
+**[简体中文](https://github.com/Guikong001/PID-Bark-monitor/blob/main/README.md)**
 
 ## Usage
 
